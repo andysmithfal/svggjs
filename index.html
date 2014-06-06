@@ -1,0 +1,36 @@
+<html> 
+	<head> 
+		<title>ptr.html</title>
+		<script src="jquery-1.11.1.min.js"></script>
+		<script src="underscore-min.js"></script>
+		<style>
+			#output{
+				border: 1px solid black;
+				padding: 5px;
+				width: 80%;
+				overflow-x: scroll;
+			}
+			#input{
+				width: 80%;
+				padding: 5px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<h3>Input:</h3>
+		<textarea id="input"></textarea><br>
+		Input:
+		<input type="radio" name="input_type" value="p" checked>Point data
+		<input type="radio" name="input_type" value="x">SVG document<br>
+		Output:
+		<input type="radio" name="output_type" value="g" checked>GCode
+		<input type="radio" name="output_type" value="r">R plots
+		<input type="button" id="process" value="Go">
+		<h3>Output:</h3>
+		<pre id="output"></pre>
+
+	</body>
+
+	<script src="ptr.js"></script>
+</html>
