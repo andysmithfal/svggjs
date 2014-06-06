@@ -22,7 +22,7 @@ function process_points(point_array){
 	return xys;
 }
 
-function path_to_gcode(xys){
+function points_to_gcode(xys){
 	var header = "%\nM3\nG21\n";
 	var footer = "G00 Z5.00000\nM5\nG00 X0.0000 Y0.0000\nM2\n%";
 	var main = "";
@@ -42,6 +42,30 @@ function path_to_gcode(xys){
 	});
 	return header+main+footer;
 }
+
+function rpoints_to_gcode(xys){
+	var header = "%\nM3\nG21\n";
+	var footer = "G00 Z5.00000\nM5\nG00 X0.0000 Y0.0000\nM2\n%";
+	var main = "";
+	_.each(xys, function(xy,i,xys){
+		var first = "G90\nG00 Z5.00000\nG00 X"+xy[0][0]+" Y"+xy[0][1]+"\n"+"G01 Z-0.125000 F100.0\nG91\n";
+		var return_to_home = "G90\nG01 X"+xy[0][0]+" Y"+xy[0][1]+"\n";
+		var path = "";
+		_.each(xy, function(e,i,xy){
+			if(i == 0) return;
+			path = path+"G01 X"+e[0]+" Y"+e[1]+" Z-0.125000";
+			if(i == 1){
+				path = path+" F400.0\n";
+			}else{
+				path = path+"\n";
+			}
+		});
+		main = main+first+path+return_to_home;
+	});
+	return header+main+footer;
+}
+
+
 
 function path_to_r(xy){
 	var x = Array();
@@ -81,10 +105,13 @@ $("#process").on("click", function(e){
 	var output; 
 	switch($('input[name=output_type]:checked').val()){
 		case "g": 
-			output = path_to_gcode(xys);
+			output = points_to_gcode(xys);
 		break; 
 		case "r": 
 			output = path_to_r(xys);
+		break;
+		case "rg": 
+			output = rpoints_to_gcode(xys);
 		break;
 	}
 	$("#output").text(output);
